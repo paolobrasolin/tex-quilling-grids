@@ -1,0 +1,68 @@
+% ###################################################################### START #
+
+\setuppapersize[A4]
+
+\let\p\relax
+\let\q\relax
+
+\startuseMPgraphic{quadrant}
+
+p:=\p;
+q:=\q;
+
+n:=36;
+m:=6;
+
+r:=15;
+
+u:=1cm;
+
+pen thin;  thin  = pencircle scaled 1.0;
+pen thick; thick = pencircle scaled 3.0;
+color grey; grey = 0.7white;
+
+pickup thin; drawoptions(withcolor grey);
+
+for i=-r upto r: draw (i,-r)*1cm -- (i,r)*1cm if (i mod 5)=0: withpen thick fi; endfor
+for i=-r upto r: draw (-r,i)*1cm -- (r,i)*1cm if (i mod 5)=0: withpen thick fi; endfor
+
+pickup thin; drawoptions(withcolor black);
+
+drawdot origin withpen thick scaled 2;
+
+for i=1 upto r:
+  draw fullcircle scaled (i*2*1cm)
+    if (i mod 5)=0: withpen thick fi;
+endfor;
+
+for i=1 upto n:
+  draw (dir(i*360/n))*1cm -- (dir(i*360/n))*r*1cm
+    if (i mod m)=0: withpen thick fi;
+endfor;
+
+clip currentpicture to unitsquare
+  xscaled p yscaled q
+  scaled ((r+1)*1cm);
+
+pickup thin; drawoptions(withcolor black);
+draw (    -2u,   -0.5)*p -- (    -1u,   -0.5)*p;
+draw ((r+1)*u,   -0.5)*p -- ((r+2)*u,   -0.5)*p;
+draw (   -0.5,    -2u)*q -- (   -0.5,    -1u)*q;
+draw (   -0.5,(r+1)*u)*q -- (   -0.5,(r+2)*u)*q;
+
+\stopuseMPgraphic
+
+\defineoverlay[backdrop][{\useMPgraphic{quadrant}}]
+\setupbackgrounds[paper][background=backdrop]
+\setuppagenumbering[location=]
+
+% ####################################################################### TEXT #
+
+\starttext
+  \def\p {1} \def\q {1} \page[empty]
+  \def\p{-1} \def\q {1} \page[empty]
+  \def\p{-1} \def\q{-1} \page[empty]
+  \def\p {1} \def\q{-1} \page[empty]
+\stoptext
+
+% ####################################################################### STOP #
